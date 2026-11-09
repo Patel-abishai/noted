@@ -1,0 +1,1248 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Noted prototype</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400;1,6..72,500&amp;family=Hanken+Grotesk:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; background: {{t.bg}}; color: {{t.ink}}; font-family: 'Hanken Grotesk', system-ui, sans-serif; font-size: 15px; line-height: 1.4">
+
+<!-- ================= HOME ================= -->
+<sc-if value="{{is.home}}" hint-placeholder-val="{{true}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 24px; height: 52px">
+    <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 34px; font-weight: 500; letter-spacing: -0.6px; color: {{t.ink}}">Noted</span>
+    <button aria-label="Notifications" onClick="{{openNotif}}" style="position: relative; width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.bell}}"></path></svg>
+      <span style="position: absolute; top: 9px; right: 10px; width: 9px; height: 9px; border-radius: 50%; background: {{t.accent}}; box-shadow: 0 0 0 2px {{t.bg}}"></span>
+    </button>
+  </div>
+
+  <div style="display: flex; gap: 12px; overflow-x: auto; padding: 14px 20px 20px; align-items: flex-start; scrollbar-width: none">
+    <sc-for list="{{moments}}" as="m" hint-placeholder-count="4">
+      <button onClick="{{m.open}}" aria-label="{{m.aria}}" style="flex: 0 0 auto; width: {{m.colW}}; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; color: {{t.ink}}; font: inherit">
+        <span style="width: {{m.size}}; height: {{m.size}}; border-radius: 50%; border: {{m.ring}}; padding: 3px; box-sizing: border-box; display: flex">
+          <span style="flex: 1; border-radius: 50%; background: {{m.tone}}; color: {{m.fg}}; display: flex; align-items: center; justify-content: center">
+            <svg width="{{m.iconSize}}" height="{{m.iconSize}}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg>
+          </span>
+        </span>
+        <span style="font-size: 12px; font-weight: 500; white-space: nowrap; color: {{t.ink}}">{{m.short}}</span>
+        <span style="font-size: 11px; font-weight: 600; white-space: nowrap; color: {{m.countColor}}; background: {{m.countBg}}; padding: 2px 8px; border-radius: 999px; margin-top: -3px">{{m.countLabel}}</span>
+      </button>
+    </sc-for>
+    <button onClick="{{openAddDate}}" aria-label="Add a date" style="flex: 0 0 auto; width: 70px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; color: {{t.muted}}; font: inherit">
+      <span style="width: 66px; height: 66px; border-radius: 50%; border: 1.5px dashed {{t.line2}}; box-sizing: border-box; display: flex; align-items: center; justify-content: center">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="{{ic.plus}}"></path></svg>
+      </span>
+      <span style="font-size: 12px; font-weight: 500">Add date</span>
+    </button>
+  </div>
+
+  <div style="height: 1px; background: {{t.line}}; margin: 0 20px"></div>
+
+  <div style="padding: 24px 20px 6px; display: flex; align-items: flex-end; justify-content: space-between; gap: 12px">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.accentText}}">{{nearest.countLong}}</span>
+      <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 28px; line-height: 1.1; letter-spacing: -0.4px">For {{nearest.title}}</h1>
+      <span style="font-size: 13px; color: {{t.muted}}">Picked from {{stats.notes}} things you noted about her</span>
+    </div>
+    <button onClick="{{nearest.open}}" style="flex: 0 0 auto; height: 44px; border: 0; background: transparent; color: {{t.ink}}; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer; padding: 0 4px; text-decoration: underline; text-underline-offset: 3px">Plan it</button>
+  </div>
+
+  <div style="display: flex; flex-direction: column; gap: 18px; padding: 16px 16px 32px">
+    <sc-for list="{{feed}}" as="g" hint-placeholder-count="3">
+      <article style="background: {{t.surface}}; border-radius: 22px; overflow: hidden; box-shadow: {{t.shadow}}">
+        <div style="height: 236px; background: {{g.tone}}; color: {{g.fg}}; display: flex; align-items: center; justify-content: center; position: relative">
+          <svg width="120" height="120" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8" aria-hidden="true"><path d="{{g.art}}"></path></svg>
+          <button onClick="{{g.toggleSave}}" aria-label="{{g.saveLabel}}" style="position: absolute; top: 12px; right: 12px; width: 44px; height: 44px; border-radius: 50%; border: 0; background: rgba(255,250,242,0.88); color: #8A2E3B; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="{{g.heartFill}}" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.heart}}"></path></svg>
+          </button>
+        </div>
+        <div style="padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; gap: 8px; align-items: flex-start; color: {{t.accentText}}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex: 0 0 auto; margin-top: 3px" aria-hidden="true"><path d="{{ic.note}}"></path></svg>
+            <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 16px; line-height: 1.35">{{g.reason}}</span>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+            <div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+              <span style="font-size: 15px; font-weight: 600; color: {{t.ink}}">{{g.title}}</span>
+              <span style="font-size: 14px; color: {{t.muted}}">{{g.price}}</span>
+            </div>
+            <button onClick="{{g.shop}}" style="flex: 0 0 auto; height: 44px; padding: 0 18px; border-radius: 999px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer">Shop
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.arrow}}"></path></svg>
+            </button>
+          </div>
+        </div>
+      </article>
+    </sc-for>
+    <sc-if value="{{feedEmpty}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 28px 20px; border-radius: 22px; border: 1.5px dashed {{t.line2}}; text-align: center; color: {{t.muted}}; font-size: 14px">No notes tied to this one yet. Add a few things you know, and picks show up here.</div>
+    </sc-if>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= PARTNER ================= -->
+<sc-if value="{{is.partner}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 20px; height: 52px">
+    <div style="display: flex; align-items: center; gap: 6px; color: {{t.muted}}; font-size: 13px; font-weight: 500">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.lock}}"></path></svg>
+      Only you can see this
+    </div>
+    <button onClick="{{openAdd}}" aria-label="Add a note about Meera" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="{{ic.plusSq}}"></path></svg>
+    </button>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 22px; padding: 10px 20px 0">
+    <div style="flex: 0 0 auto; width: 96px; height: 96px; border-radius: 50%; padding: 3px; border: 1.5px solid {{t.line2}}; box-sizing: border-box">
+      <div style="width: 100%; height: 100%; border-radius: 50%; background: #B9765A; display: flex; align-items: center; justify-content: center; color: #FBF2E6; font-family: 'Newsreader', Georgia, serif; font-size: 40px; font-style: italic">M</div>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; text-align: center">
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 24px; font-weight: 500">{{stats.notes}}</span><span style="font-size: 12px; color: {{t.muted}}">Notes</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 24px; font-weight: 500">{{stats.wish}}</span><span style="font-size: 12px; color: {{t.muted}}">Wishlist</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 24px; font-weight: 500">{{stats.dates}}</span><span style="font-size: 12px; color: {{t.muted}}">Dates</span></div>
+    </div>
+  </div>
+
+  <div style="padding: 14px 20px 0; display: flex; flex-direction: column; gap: 2px">
+    <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 28px; letter-spacing: -0.4px; line-height: 1.15">Meera Kapoor</h1>
+    <span style="font-size: 14px; color: {{t.muted}}">Together since 2021</span>
+    <span style="font-size: 14px; color: {{t.ink}}; margin-top: 4px">Architect. Slow mornings, loud playlists, gold over silver.</span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 16px 20px 0">
+    <button onClick="{{openAdd}}" style="height: 40px; border-radius: 12px; border: 0; background: {{t.chip}}; color: {{t.ink}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Add a note</button>
+    <button onClick="{{nearest.open}}" style="height: 40px; border-radius: 12px; border: 0; background: {{t.chip}}; color: {{t.ink}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{nearest.short}} · {{nearest.countShort}}</button>
+  </div>
+
+  <div style="padding: 10px 20px 0">
+    <button onClick="{{openRepair}}" style="width: 100%; min-height: 56px; padding: 8px 12px 8px 10px; box-sizing: border-box; border-radius: 16px; border: 1.5px solid {{t.line}}; background: transparent; color: {{t.ink}}; font: inherit; display: flex; align-items: center; gap: 12px; text-align: left; cursor: pointer">
+      <span style="flex: 0 0 auto; width: 36px; height: 36px; border-radius: 50%; background: {{t.chip}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.mend}}"></path></svg>
+      </span>
+      <span style="flex: 1; display: flex; flex-direction: column">
+        <span style="font-size: 14px; font-weight: 600">Make it right</span>
+        <span style="font-size: 12px; color: {{t.muted}}">After a rough moment. Only you see this.</span>
+      </span>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="color: {{t.muted}}" aria-hidden="true"><path d="{{ic.chev}}"></path></svg>
+    </button>
+  </div>
+
+  <div style="display: flex; gap: 14px; overflow-x: auto; padding: 20px 20px 8px; scrollbar-width: none">
+    <sc-for list="{{highlights}}" as="h" hint-placeholder-count="5">
+      <button onClick="{{h.open}}" style="flex: 0 0 auto; width: 66px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; color: {{t.ink}}; font: inherit">
+        <span style="width: 64px; height: 64px; border-radius: 50%; border: 1.5px solid {{t.line2}}; padding: 3px; box-sizing: border-box; display: flex">
+          <span style="flex: 1; border-radius: 50%; background: {{t.chip}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg>
+          </span>
+        </span>
+        <span style="font-size: 12px; font-weight: 500; white-space: nowrap">{{h.label}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 10px; border-bottom: 1px solid {{t.line}}">
+    <sc-for list="{{gridTabs}}" as="gt" hint-placeholder-count="3">
+      <button onClick="{{gt.pick}}" aria-pressed="{{gt.on}}" style="height: 46px; border: 0; background: transparent; font: inherit; font-size: 14px; font-weight: 600; color: {{gt.color}}; cursor: pointer; box-shadow: inset 0 -2px 0 {{gt.bar}}">{{gt.label}}</button>
+    </sc-for>
+  </div>
+
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 2px; padding-bottom: 24px">
+    <sc-for list="{{grid}}" as="tile" hint-placeholder-count="9">
+      <button onClick="{{tile.open}}" aria-label="{{tile.aria}}" style="aspect-ratio: 1; width: 100%; border: 0; padding: 0; position: relative; overflow: hidden; background: {{tile.bgc}}; color: {{tile.fg}}; cursor: pointer; display: block; font: inherit; text-align: left">
+        <sc-if value="{{tile.isPhoto}}" hint-placeholder-val="{{true}}">
+          <span style="position: absolute; inset: 0; display: flex; align-items: center; justify-content: center">
+            <svg width="60" height="60" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.8" aria-hidden="true"><path d="{{tile.art}}"></path></svg>
+          </span>
+          <span style="position: absolute; left: 8px; bottom: 7px; right: 8px; font-size: 10.5px; font-weight: 600; line-height: 1.2">{{tile.caption}}</span>
+        </sc-if>
+        <sc-if value="{{tile.isNote}}" hint-placeholder-val="{{false}}">
+          <span style="position: absolute; inset: 0; padding: 11px; display: flex; align-items: flex-end; font-family: 'Newsreader', Georgia, serif; font-size: 15px; line-height: 1.2">{{tile.text}}</span>
+        </sc-if>
+        <sc-if value="{{tile.isLink}}" hint-placeholder-val="{{false}}">
+          <span style="position: absolute; inset: 7px; border-radius: 8px; background: {{t.surface}}; box-shadow: 0 1px 2px rgba(0,0,0,0.12); overflow: hidden; display: flex; flex-direction: column">
+            <span style="height: 12px; display: flex; gap: 3px; align-items: center; padding: 0 6px; background: {{t.chip}}">
+              <span style="width: 4px; height: 4px; border-radius: 50%; background: {{t.muted}}"></span><span style="width: 4px; height: 4px; border-radius: 50%; background: {{t.muted}}"></span><span style="width: 4px; height: 4px; border-radius: 50%; background: {{t.muted}}"></span>
+            </span>
+            <span style="flex: 1; background: {{tile.tone}}; color: {{tile.artFg}}; display: flex; align-items: center; justify-content: center">
+              <svg width="34" height="34" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{tile.art}}"></path></svg>
+            </span>
+            <span style="padding: 4px 6px 5px; display: flex; flex-direction: column; color: {{t.ink}}">
+              <span style="font-size: 9.5px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{tile.title}}</span>
+              <span style="font-size: 9.5px; color: {{t.muted}}">{{tile.price}}</span>
+            </span>
+          </span>
+        </sc-if>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= MOMENT DETAIL ================= -->
+<sc-if value="{{is.moment}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 8px; height: 52px">
+    <button onClick="{{goBack}}" aria-label="Back" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.back}}"></path></svg>
+    </button>
+    <span style="font-size: 13px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Moment</span>
+    <span style="width: 44px"></span>
+  </div>
+
+  <div style="padding: 12px 24px 0; display: flex; flex-direction: column; align-items: center; text-align: center">
+    <span style="width: 72px; height: 72px; border-radius: 50%; background: {{mo.tone}}; color: {{mo.fg}}; display: flex; align-items: center; justify-content: center">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{mo.icon}}"></path></svg>
+    </span>
+    <h1 style="margin: 18px 0 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 32px; letter-spacing: -0.5px; line-height: 1.1">{{mo.title}}</h1>
+    <span style="font-size: 14px; color: {{t.muted}}; margin-top: 6px">{{mo.dateLong}} · {{mo.sub}}</span>
+  </div>
+
+  <div style="margin: 24px 20px 0; padding: 20px 22px; border-radius: 22px; background: {{t.surface}}; box-shadow: {{t.shadow}}; display: flex; align-items: center; gap: 18px">
+    <span style="font-family: 'Newsreader', Georgia, serif; font-size: 64px; line-height: 0.9; font-weight: 400; color: {{t.accentText}}">{{mo.days}}</span>
+    <div style="display: flex; flex-direction: column; gap: 4px; flex: 1">
+      <span style="font-size: 15px; font-weight: 600">{{mo.daysWord}} to go</span>
+      <span style="font-size: 13px; color: {{t.muted}}">{{mo.planLine}}</span>
+      <div style="height: 4px; border-radius: 2px; background: {{t.chip}}; margin-top: 6px; overflow: hidden">
+        <div style="height: 4px; width: {{mo.progress}}; background: {{t.accent}}; border-radius: 2px"></div>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding: 28px 20px 10px; display: flex; align-items: baseline; justify-content: space-between">
+    <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 22px">Three picks from her notes</h2>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 20px">
+    <sc-for list="{{mo.picks}}" as="g" hint-placeholder-count="3">
+      <div style="display: flex; gap: 14px; align-items: center; padding: 10px; border-radius: 18px; background: {{t.surface}}; box-shadow: {{t.shadow}}">
+        <span style="flex: 0 0 auto; width: 84px; height: 84px; border-radius: 12px; background: {{g.tone}}; color: {{g.fg}}; display: flex; align-items: center; justify-content: center">
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85" aria-hidden="true"><path d="{{g.art}}"></path></svg>
+        </span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+          <span style="font-size: 14px; font-weight: 600">{{g.title}}</span>
+          <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; line-height: 1.3; color: {{t.accentText}}">{{g.reason}}</span>
+          <span style="font-size: 13px; color: {{t.muted}}">{{g.price}}</span>
+        </div>
+        <button onClick="{{g.shop}}" aria-label="{{g.shopLabel}}" style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.arrow}}"></path></svg>
+        </button>
+      </div>
+    </sc-for>
+    <sc-if value="{{mo.noPicks}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 22px; border-radius: 18px; border: 1.5px dashed {{t.line2}}; text-align: center; color: {{t.muted}}; font-size: 14px">Nothing noted for this yet. Every note you add sharpens the picks.</div>
+    </sc-if>
+  </div>
+
+  <div style="padding: 30px 20px 10px">
+    <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 22px">Given before</h2>
+  </div>
+  <div style="padding: 0 20px; display: flex; flex-direction: column">
+    <sc-for list="{{mo.past}}" as="p" hint-placeholder-count="3">
+      <div style="display: flex; gap: 16px; padding: 14px 0; border-top: 1px solid {{t.line}}">
+        <span style="flex: 0 0 auto; width: 44px; font-family: 'Newsreader', Georgia, serif; font-size: 17px; color: {{t.muted}}">{{p.year}}</span>
+        <div style="display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 15px; font-weight: 600">{{p.gift}}</span>
+          <span style="font-size: 14px; color: {{t.muted}}">{{p.reaction}}</span>
+        </div>
+      </div>
+    </sc-for>
+    <sc-if value="{{mo.noPast}}" hint-placeholder-val="{{false}}">
+      <div style="padding: 14px 0; border-top: 1px solid {{t.line}}; font-size: 14px; color: {{t.muted}}">First time on Noted. What you give this year starts the history.</div>
+    </sc-if>
+  </div>
+
+  <div style="padding: 24px 20px 32px">
+    <button onClick="{{togglePlanned}}" style="width: 100%; height: 52px; border-radius: 16px; border: {{mo.planBorder}}; background: {{mo.planBg}}; color: {{mo.planFg}}; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">{{mo.planLabel}}</button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= FAMILY ================= -->
+<sc-if value="{{is.family}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="padding: 6px 24px 0; display: flex; flex-direction: column; gap: 4px">
+    <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 34px; letter-spacing: -0.5px">Family</h1>
+    <span style="font-size: 14px; color: {{t.muted}}">The people she loves, so you never miss them either.</span>
+  </div>
+
+  <div style="display: flex; gap: 14px; overflow-x: auto; padding: 22px 20px 6px; scrollbar-width: none">
+    <sc-for list="{{family}}" as="f" hint-placeholder-count="4">
+      <button onClick="{{f.open}}" style="flex: 0 0 auto; width: 70px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; cursor: pointer; color: {{t.ink}}; font: inherit">
+        <span style="width: 66px; height: 66px; border-radius: 50%; border: {{f.ring}}; padding: 3px; box-sizing: border-box; display: flex">
+          <span style="flex: 1; border-radius: 50%; background: {{f.tone}}; color: #FBF2E6; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-size: 24px; font-style: italic">{{f.initial}}</span>
+        </span>
+        <span style="font-size: 12px; font-weight: 500">{{f.first}}</span>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="padding: 22px 20px 8px">
+    <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Meera's side</span>
+  </div>
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 16px 32px">
+    <sc-for list="{{family}}" as="f" hint-placeholder-count="4">
+      <button onClick="{{f.open}}" style="display: flex; align-items: center; gap: 14px; padding: 14px; border-radius: 20px; border: 0; background: {{t.surface}}; box-shadow: {{t.shadow}}; color: {{t.ink}}; font: inherit; text-align: left; cursor: pointer; width: 100%">
+        <span style="flex: 0 0 auto; width: 52px; height: 52px; border-radius: 50%; background: {{f.tone}}; color: #FBF2E6; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-style: italic">{{f.initial}}</span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-size: 19px">{{f.name}}</span>
+          <span style="font-size: 13px; color: {{t.muted}}">{{f.relation}} · {{f.noteCount}} notes</span>
+        </span>
+        <span style="flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 2px">
+          <span style="font-size: 12px; font-weight: 600; color: {{f.nextColor}}; background: {{f.nextBg}}; padding: 3px 9px; border-radius: 999px">{{f.nextCount}}</span>
+          <span style="font-size: 12px; color: {{t.muted}}">{{f.nextLabel}}</span>
+        </span>
+      </button>
+    </sc-for>
+    <button onClick="{{addFamily}}" style="display: flex; align-items: center; justify-content: center; gap: 8px; height: 56px; border-radius: 20px; border: 1.5px dashed {{t.line2}}; background: transparent; color: {{t.muted}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="{{ic.plus}}"></path></svg>
+      Add someone
+    </button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= FAMILY MEMBER ================= -->
+<sc-if value="{{is.member}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 8px; height: 52px">
+    <button onClick="{{goBack}}" aria-label="Back to family" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.back}}"></path></svg>
+    </button>
+    <span style="font-size: 13px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Family</span>
+    <span style="width: 44px"></span>
+  </div>
+
+  <div style="display: flex; align-items: center; gap: 22px; padding: 10px 20px 0">
+    <div style="flex: 0 0 auto; width: 86px; height: 86px; border-radius: 50%; padding: 3px; border: 1.5px solid {{t.line2}}; box-sizing: border-box">
+      <div style="width: 100%; height: 100%; border-radius: 50%; background: {{fm.tone}}; display: flex; align-items: center; justify-content: center; color: #FBF2E6; font-family: 'Newsreader', Georgia, serif; font-size: 34px; font-style: italic">{{fm.initial}}</div>
+    </div>
+    <div style="flex: 1; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; text-align: center">
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500">{{fm.noteCount}}</span><span style="font-size: 12px; color: {{t.muted}}">Notes</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500">{{fm.ideaCount}}</span><span style="font-size: 12px; color: {{t.muted}}">Ideas</span></div>
+      <div style="display: flex; flex-direction: column"><span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-weight: 500">{{fm.dateCount}}</span><span style="font-size: 12px; color: {{t.muted}}">Dates</span></div>
+    </div>
+  </div>
+  <div style="padding: 14px 20px 0; display: flex; flex-direction: column; gap: 2px">
+    <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px; letter-spacing: -0.3px">{{fm.name}}</h1>
+    <span style="font-size: 14px; color: {{t.muted}}">{{fm.relation}}</span>
+  </div>
+
+  <div style="padding: 24px 20px 8px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Dates</span></div>
+  <div style="padding: 0 20px; display: flex; flex-direction: column">
+    <sc-for list="{{fm.dates}}" as="d" hint-placeholder-count="2">
+      <div style="display: flex; align-items: center; gap: 14px; padding: 12px 0; border-top: 1px solid {{t.line}}">
+        <span style="flex: 0 0 auto; width: 40px; height: 40px; border-radius: 12px; background: {{t.chip}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.icon}}"></path></svg>
+        </span>
+        <span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 15px; font-weight: 600">{{d.label}}</span><span style="font-size: 13px; color: {{t.muted}}">{{d.when}}</span></span>
+        <span style="font-size: 13px; font-weight: 600; color: {{t.accentText}}">{{d.count}}</span>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="padding: 24px 20px 10px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Notes</span></div>
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; padding: 0 20px">
+    <sc-for list="{{fm.notes}}" as="n" hint-placeholder-count="4">
+      <div style="min-height: 104px; border-radius: 16px; padding: 14px; box-sizing: border-box; background: {{n.bg}}; color: {{n.fg}}; display: flex; align-items: flex-end; font-family: 'Newsreader', Georgia, serif; font-size: 16px; line-height: 1.25">{{n.text}}</div>
+    </sc-for>
+  </div>
+
+  <div style="padding: 26px 20px 10px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Gift ideas</span></div>
+  <div style="display: flex; flex-direction: column; gap: 10px; padding: 0 20px 32px">
+    <sc-for list="{{fm.ideas}}" as="g" hint-placeholder-count="2">
+      <div style="display: flex; gap: 14px; align-items: center; padding: 10px; border-radius: 18px; background: {{t.surface}}; box-shadow: {{t.shadow}}">
+        <span style="flex: 0 0 auto; width: 64px; height: 64px; border-radius: 12px; background: {{g.tone}}; color: {{g.fg}}; display: flex; align-items: center; justify-content: center">
+          <svg width="38" height="38" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{g.art}}"></path></svg>
+        </span>
+        <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+          <span style="font-size: 14px; font-weight: 600">{{g.title}}</span>
+          <span style="font-size: 13px; color: {{t.muted}}">{{g.price}}</span>
+        </div>
+        <button onClick="{{g.shop}}" style="flex: 0 0 auto; height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{t.line2}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Shop</button>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= YOU ================= -->
+<sc-if value="{{is.you}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="padding: 6px 24px 0; display: flex; align-items: center; gap: 16px">
+    <div style="width: 64px; height: 64px; border-radius: 50%; background: #4D5A4E; color: #FBF2E6; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-size: 28px; font-style: italic">A</div>
+    <div style="display: flex; flex-direction: column">
+      <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 28px; letter-spacing: -0.4px">Arjun Mehta</h1>
+      <span style="font-size: 14px; color: {{t.muted}}">Keeping notes on Meera since 2023</span>
+    </div>
+  </div>
+
+  <div style="margin: 24px 20px 0; padding: 20px; border-radius: 22px; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; flex-direction: column; gap: 14px">
+    <div style="display: flex; align-items: center; justify-content: space-between">
+      <span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-style: italic">Noted, together</span>
+      <span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255,248,240,0.18)">Active</span>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <span style="display: flex">
+        <span style="width: 34px; height: 34px; border-radius: 50%; background: #4D5A4E; box-shadow: 0 0 0 2px {{t.accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-style: italic; color: #FBF2E6">A</span>
+        <span style="width: 34px; height: 34px; border-radius: 50%; background: #B9765A; box-shadow: 0 0 0 2px {{t.accent}}; margin-left: -8px; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-style: italic; color: #FBF2E6">M</span>
+      </span>
+      <span style="font-size: 14px; line-height: 1.35">One plan covers both of you. [PRICE] / month, renews 3 December.</span>
+    </div>
+  </div>
+
+  <div style="margin: 12px 20px 0; padding: 18px 20px; border-radius: 22px; background: {{t.surface}}; box-shadow: {{t.shadow}}; display: flex; gap: 14px; align-items: flex-start">
+    <span style="flex: 0 0 auto; width: 40px; height: 40px; border-radius: 12px; background: {{t.chip}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.lock}}"></path></svg>
+    </span>
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <span style="font-size: 15px; font-weight: 600">Meera has 31 notes on you</span>
+      <span style="font-size: 14px; color: {{t.muted}}">You can't see hers, she can't see yours. That's the whole point.</span>
+    </div>
+  </div>
+
+  <div style="padding: 26px 20px 8px"><span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Settings</span></div>
+  <div style="margin: 0 20px 32px; border-radius: 22px; background: {{t.surface}}; box-shadow: {{t.shadow}}; overflow: hidden">
+    <button onClick="{{toggleDark}}" aria-pressed="{{darkOn}}" style="width: 100%; min-height: 56px; padding: 0 18px; border: 0; background: transparent; color: {{t.ink}}; font: inherit; font-size: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer">
+      <span style="display: flex; align-items: center; gap: 12px">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.moon}}"></path></svg>
+        Dark mode
+      </span>
+      <span style="width: 46px; height: 28px; border-radius: 14px; background: {{sw.track}}; position: relative; display: block">
+        <span style="position: absolute; top: 3px; left: {{sw.knob}}; width: 22px; height: 22px; border-radius: 50%; background: #FFFDF8; box-shadow: 0 1px 3px rgba(0,0,0,0.25)"></span>
+      </span>
+    </button>
+    <sc-for list="{{settings}}" as="row" hint-placeholder-count="3">
+      <button onClick="{{row.tap}}" style="width: 100%; min-height: 56px; padding: 0 18px; border: 0; border-top: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 15px; display: flex; align-items: center; justify-content: space-between; cursor: pointer">
+        <span style="display: flex; align-items: center; gap: 12px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{row.icon}}"></path></svg>
+          {{row.label}}
+        </span>
+        <span style="font-size: 14px; color: {{t.muted}}">{{row.value}}</span>
+      </button>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= MAKE IT RIGHT: TELL US ================= -->
+<sc-if value="{{is.repair}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 230px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 8px; height: 52px">
+    <button onClick="{{goBack}}" aria-label="Back" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.back}}"></path></svg>
+    </button>
+    <span style="font-size: 13px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Make it right</span>
+    <span style="width: 44px"></span>
+  </div>
+
+  <div style="padding: 12px 24px 0; display: flex; flex-direction: column; gap: 10px">
+    <h1 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 32px; letter-spacing: -0.5px; line-height: 1.1">What happened?</h1>
+    <div style="display: flex; align-items: center; gap: 6px; color: {{t.muted}}; font-size: 13px; font-weight: 500">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.lock}}"></path></svg>
+      Private to you. Meera never sees this.
+    </div>
+  </div>
+
+  <div style="padding: 24px 20px 0; display: flex; flex-direction: column; gap: 10px">
+    <div style="align-self: flex-start; max-width: 300px; padding: 14px 16px; border-radius: 20px 20px 20px 6px; background: {{t.chip}}; color: {{t.ink}}; font-size: 15px; line-height: 1.45">Rough one? Tell me what happened, the way you&#39;d tell a friend. It doesn&#39;t have to sound good.</div>
+    <div style="align-self: flex-start; max-width: 300px; padding: 14px 16px; border-radius: 20px 20px 20px 6px; background: {{t.chip}}; color: {{t.ink}}; font-size: 15px; line-height: 1.45">I already know a fair bit about her. I&#39;ll use it.</div>
+  </div>
+
+  <div style="padding: 22px 20px 0">
+    <span style="font-size: 12px; font-weight: 600; color: {{t.muted}}">Or start with</span>
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px">
+      <sc-for list="{{repairStarters}}" as="rs" hint-placeholder-count="3">
+        <button onClick="{{rs.pick}}" style="height: 38px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{t.line2}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{rs.label}}</button>
+      </sc-for>
+    </div>
+  </div>
+</div>
+<div style="position: absolute; left: 0; right: 0; bottom: 84px; padding: 12px 16px 14px; box-sizing: border-box; background: {{t.bg}}; border-top: 1px solid {{t.line}}">
+  <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 4px 8px">
+    <label for="mir-text" style="font-size: 12px; font-weight: 600; color: {{t.muted}}">In your own words</label>
+    <span style="font-size: 12px; color: {{t.muted}}">{{repair.leftLabel}}</span>
+  </div>
+  <div style="display: flex; gap: 8px; align-items: flex-end">
+    <textarea id="mir-text" value="{{repair.text}}" onChange="{{onRepairText}}" placeholder="I forgot dinner with her parents, then got defensive when she brought it up" style="flex: 1; min-width: 0; height: 96px; box-sizing: border-box; border-radius: 18px; border: 1.5px solid {{t.line2}}; background: {{t.surface}}; color: {{t.ink}}; padding: 12px 14px; font: inherit; font-size: 15px; line-height: 1.4; resize: none; outline-color: {{t.accent}}"></textarea>
+    <button onClick="{{submitRepair}}" aria-label="Send" style="flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.send}}"></path></svg>
+    </button>
+  </div>
+</div>
+</sc-if>
+
+<!-- ================= MAKE IT RIGHT: RESPONSE ================= -->
+<sc-if value="{{is.repairResult}}" hint-placeholder-val="{{false}}">
+<div style="position: absolute; top: 0; left: 0; right: 0; bottom: 84px; overflow-y: auto; padding-top: 50px; box-sizing: border-box; scrollbar-width: none">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 0 12px 0 8px; height: 52px">
+    <button onClick="{{goBack}}" aria-label="Back" style="width: 44px; height: 44px; border: 0; background: transparent; color: {{t.ink}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.back}}"></path></svg>
+    </button>
+    <span style="font-size: 13px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.muted}}">Make it right</span>
+    <span style="width: 44px"></span>
+  </div>
+
+  <div style="padding: 8px 20px 0; display: flex; flex-direction: column">
+    <div style="align-self: flex-end; max-width: 300px; padding: 14px 16px; border-radius: 20px 20px 6px 20px; background: {{t.ink}}; color: {{t.bg}}; font-size: 15px; line-height: 1.45">{{repair.sent}}</div>
+  </div>
+
+  <!-- normal response -->
+  <sc-if value="{{repair.normal}}" hint-placeholder-val="{{true}}">
+    <div style="padding: 16px 20px 0">
+      <div style="align-self: flex-start; max-width: 300px; padding: 14px 16px; border-radius: 20px 20px 20px 6px; background: {{t.chip}}; color: {{t.ink}}; font-size: 15px; line-height: 1.45; display: inline-block">That&#39;s fixable. Here&#39;s how I&#39;d read it.</div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px; padding: 16px 16px 0">
+      <article style="background: {{t.surface}}; border-radius: 22px; box-shadow: {{t.shadow}}; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.accentText}}">How she might be feeling</span>
+        <p style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-size: 19px; line-height: 1.35">{{repairFeel}}</p>
+      </article>
+
+      <article style="background: {{t.surface}}; border-radius: 22px; box-shadow: {{t.shadow}}; padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.accentText}}">What to say</span>
+        <div style="padding: 16px 18px; border-radius: 16px; background: {{t.bg}}; font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 19px; line-height: 1.4">{{repairSay}}</div>
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px">
+          <span style="font-size: 13px; color: {{t.muted}}">Better in person. Change any word that isn&#39;t yours.</span>
+          <button onClick="{{copyLine}}" style="flex: 0 0 auto; height: 40px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{t.line2}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.copy}}"></path></svg>
+            {{copyLabel}}
+          </button>
+        </div>
+      </article>
+
+      <article style="background: {{t.surface}}; border-radius: 22px; box-shadow: {{t.shadow}}; padding: 18px 16px 16px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.4px; text-transform: uppercase; color: {{t.accentText}}; padding: 0 4px">A small gesture</span>
+        <sc-for list="{{gestures}}" as="g" hint-placeholder-count="2">
+          <div style="display: flex; gap: 14px; align-items: center; padding: 8px; border-radius: 16px; background: {{t.bg}}">
+            <span style="flex: 0 0 auto; width: 72px; height: 72px; border-radius: 12px; background: {{g.tone}}; color: {{g.fg}}; display: flex; align-items: center; justify-content: center">
+              <svg width="42" height="42" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85" aria-hidden="true"><path d="{{g.art}}"></path></svg>
+            </span>
+            <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+              <span style="font-size: 14px; font-weight: 600">{{g.title}}</span>
+              <span style="font-family: 'Newsreader', Georgia, serif; font-style: italic; font-size: 14px; line-height: 1.3; color: {{t.accentText}}">{{g.reason}}</span>
+              <span style="font-size: 13px; color: {{t.muted}}">{{g.price}}</span>
+            </div>
+            <button onClick="{{g.get}}" style="flex: 0 0 auto; height: 40px; padding: 0 14px; border-radius: 999px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">Get it</button>
+          </div>
+        </sc-for>
+      </article>
+    </div>
+
+    <div style="padding: 16px 20px 0; display: flex; flex-direction: column; gap: 10px">
+      <sc-for list="{{followups}}" as="fu" hint-placeholder-count="0">
+        <div style="align-self: flex-end; max-width: 300px; padding: 12px 16px; border-radius: 20px 20px 6px 20px; background: {{t.ink}}; color: {{t.bg}}; font-size: 15px; line-height: 1.45">{{fu.q}}</div>
+        <div style="align-self: flex-start; max-width: 300px; padding: 12px 16px; border-radius: 20px 20px 20px 6px; background: {{t.chip}}; color: {{t.ink}}; font-size: 15px; line-height: 1.45">{{fu.a}}</div>
+      </sc-for>
+    </div>
+
+    <div style="padding: 16px 16px 32px">
+      <label for="mir-follow" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin: 0 4px 6px">Ask a follow-up</label>
+      <div style="display: flex; gap: 8px">
+        <input id="mir-follow" value="{{repair.followText}}" onChange="{{onFollowText}}" placeholder="Should I give her space first?" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{t.line2}}; background: {{t.surface}}; color: {{t.ink}}; padding: 0 14px; font: inherit; font-size: 15px; outline-color: {{t.accent}}">
+        <button onClick="{{sendFollow}}" aria-label="Send follow-up" style="flex: 0 0 auto; width: 48px; height: 48px; border-radius: 50%; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.send}}"></path></svg>
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- safety response -->
+  <sc-if value="{{repair.safety}}" hint-placeholder-val="{{false}}">
+    <div style="padding: 16px 16px 0">
+      <article style="background: {{t.surface}}; border-radius: 22px; box-shadow: {{t.shadow}}; padding: 22px 20px; display: flex; flex-direction: column; gap: 14px">
+        <span style="width: 44px; height: 44px; border-radius: 50%; background: {{t.chip}}; color: {{t.ink}}; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.heart}}"></path></svg>
+        </span>
+        <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.15">This one needs more than a gesture.</h2>
+        <p style="margin: 0; font-size: 15px; line-height: 1.5">What you&#39;ve described sounds heavier than a rough evening. A gift or a well-worded text isn&#39;t the right tool here, and you both deserve better than a quick fix.</p>
+        <p style="margin: 0; font-size: 15px; line-height: 1.5">A counselor can help you think it through, on your own or together. Reaching out is a strong move, not a dramatic one.</p>
+        <button onClick="{{findHelp}}" style="margin-top: 4px; width: 100%; height: 52px; border-radius: 16px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Find a counselor near me</button>
+      </article>
+    </div>
+    <div style="padding: 12px 16px 0">
+      <div style="padding: 16px 20px; border-radius: 22px; border: 1.5px solid {{t.line}}; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 14px; line-height: 1.45"><span style="font-weight: 600">If anyone is in danger right now,</span> call 112.</span>
+        <span style="font-size: 14px; line-height: 1.45; color: {{t.muted}}">To talk to someone tonight: Tele-MANAS, 14416. Free, any hour.</span>
+      </div>
+    </div>
+    <div style="padding: 18px 24px 32px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+      <span style="font-size: 13px; color: {{t.muted}}">This didn&#39;t count toward your free conversations.</span>
+      <button onClick="{{backToPartner}}" style="height: 44px; border: 0; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: underline; text-underline-offset: 3px">Back to Meera</button>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ================= TAB BAR ================= -->
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; height: 84px; background: {{t.bar}}; border-top: 1px solid {{t.line}}; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: start; padding-top: 6px; box-sizing: border-box">
+  <button onClick="{{nav.home.go}}" aria-label="Home" style="height: 50px; border: 0; background: transparent; color: {{nav.home.color}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="{{nav.home.fill}}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.home}}"></path></svg>Home
+  </button>
+  <button onClick="{{nav.partner.go}}" aria-label="Meera" style="height: 50px; border: 0; background: transparent; color: {{nav.partner.color}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="{{nav.partner.fill}}" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.heart}}"></path></svg>Meera
+  </button>
+  <div style="display: flex; justify-content: center">
+    <button onClick="{{openAdd}}" aria-label="Quick add" style="width: 52px; height: 52px; border-radius: 18px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; align-items: center; justify-content: center; cursor: pointer; padding: 0; box-shadow: 0 6px 16px rgba(80,20,30,0.28)">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="{{ic.plus}}"></path></svg>
+    </button>
+  </div>
+  <button onClick="{{nav.family.go}}" aria-label="Family" style="height: 50px; border: 0; background: transparent; color: {{nav.family.color}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{nav.family.sw}}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.family}}"></path></svg>Family
+  </button>
+  <button onClick="{{nav.you.go}}" aria-label="You" style="height: 50px; border: 0; background: transparent; color: {{nav.you.color}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer; font: inherit; font-size: 11px; font-weight: 600">
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="{{nav.you.sw}}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{ic.you}}"></path></svg>You
+  </button>
+</nav>
+
+<!-- ================= SHEETS ================= -->
+<sc-if value="{{sheetOpen}}" hint-placeholder-val="{{false}}">
+  <button onClick="{{closeSheet}}" aria-label="Close" style="position: absolute; inset: 0; border: 0; padding: 0; background: rgba(24,16,13,0.48); cursor: pointer"></button>
+  <div role="dialog" aria-label="{{sheetLabel}}" style="position: absolute; left: 0; right: 0; bottom: 0; max-height: 780px; overflow-y: auto; background: {{t.surface}}; color: {{t.ink}}; border-radius: 28px 28px 0 0; padding: 10px 20px 34px; box-sizing: border-box; box-shadow: 0 -10px 40px rgba(0,0,0,0.18); scrollbar-width: none">
+    <div style="width: 40px; height: 5px; border-radius: 3px; background: {{t.line2}}; margin: 0 auto 14px"></div>
+
+    <!-- QUICK ADD -->
+    <sc-if value="{{sheet.add}}" hint-placeholder-val="{{true}}">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px">
+        <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px">Note something about Meera</h2>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{modes}}" as="md" hint-placeholder-count="4">
+          <button onClick="{{md.pick}}" aria-pressed="{{md.on}}" style="height: 72px; border-radius: 16px; border: 0; background: {{md.bg}}; color: {{md.fg}}; font: inherit; font-size: 12px; font-weight: 600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; cursor: pointer">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{md.icon}}"></path></svg>
+            {{md.label}}
+          </button>
+        </sc-for>
+      </div>
+
+      <div style="margin-top: 16px">
+        <sc-if value="{{add.isNote}}" hint-placeholder-val="{{true}}">
+          <label for="qa-note" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin-bottom: 6px">What did she say, love, or need?</label>
+          <textarea id="qa-note" value="{{add.text}}" onChange="{{onText}}" placeholder="She wants a reading lamp for the balcony" style="width: 100%; height: 104px; box-sizing: border-box; border-radius: 16px; border: 1.5px solid {{t.line2}}; background: {{t.bg}}; color: {{t.ink}}; padding: 14px; font-family: 'Newsreader', Georgia, serif; font-size: 18px; line-height: 1.35; resize: none; outline-color: {{t.accent}}"></textarea>
+        </sc-if>
+        <sc-if value="{{add.isPhoto}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{snap}}" style="width: 100%; height: 190px; border-radius: 18px; border: 0; background: {{add.camBg}}; color: {{add.camFg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; cursor: pointer; font: inherit; font-size: 14px; font-weight: 600; position: relative">
+            <svg width="{{add.camIconSize}}" height="{{add.camIconSize}}" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{add.camArt}}"></path></svg>
+            {{add.camLabel}}
+          </button>
+          <label for="qa-cap" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin: 12px 0 6px">Caption</label>
+          <input id="qa-cap" value="{{add.caption}}" onChange="{{onCaption}}" placeholder="Saw this at the Kala Ghoda stall" style="width: 100%; height: 48px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{t.line2}}; background: {{t.bg}}; color: {{t.ink}}; padding: 0 14px; font: inherit; font-size: 15px; outline-color: {{t.accent}}">
+        </sc-if>
+        <sc-if value="{{add.isLink}}" hint-placeholder-val="{{false}}">
+          <label for="qa-link" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin-bottom: 6px">Product link</label>
+          <div style="display: flex; gap: 8px">
+            <input id="qa-link" value="{{add.link}}" onChange="{{onLink}}" placeholder="https://" style="flex: 1; min-width: 0; height: 48px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{t.line2}}; background: {{t.bg}}; color: {{t.ink}}; padding: 0 14px; font: inherit; font-size: 15px; outline-color: {{t.accent}}">
+            <button onClick="{{paste}}" style="flex: 0 0 auto; height: 48px; padding: 0 16px; border-radius: 14px; border: 0; background: {{t.chip}}; color: {{t.ink}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Paste</button>
+          </div>
+          <sc-if value="{{add.hasLink}}" hint-placeholder-val="{{false}}">
+            <div style="margin-top: 10px; display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 14px; background: {{t.bg}}">
+              <span style="width: 52px; height: 52px; border-radius: 10px; background: #B8673F; color: #FBF2E6; display: flex; align-items: center; justify-content: center"><svg width="32" height="32" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{art.dress}}"></path></svg></span>
+              <span style="display: flex; flex-direction: column"><span style="font-size: 14px; font-weight: 600">{{add.linkTitle}}</span><span style="font-size: 13px; color: {{t.muted}}">Price pulled from link</span></span>
+            </div>
+          </sc-if>
+        </sc-if>
+        <sc-if value="{{add.isDate}}" hint-placeholder-val="{{false}}">
+          <label for="qa-occ" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin-bottom: 6px">Occasion</label>
+          <input id="qa-occ" value="{{add.occasion}}" onChange="{{onOccasion}}" placeholder="First date anniversary" style="width: 100%; height: 48px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{t.line2}}; background: {{t.bg}}; color: {{t.ink}}; padding: 0 14px; font: inherit; font-size: 15px; outline-color: {{t.accent}}">
+          <label for="qa-date" style="display: block; font-size: 12px; font-weight: 600; color: {{t.muted}}; margin: 12px 0 6px">Date</label>
+          <input id="qa-date" type="date" value="{{add.date}}" onChange="{{onDate}}" style="width: 100%; height: 48px; box-sizing: border-box; border-radius: 14px; border: 1.5px solid {{t.line2}}; background: {{t.bg}}; color: {{t.ink}}; padding: 0 14px; font: inherit; font-size: 15px; outline-color: {{t.accent}}">
+        </sc-if>
+      </div>
+
+      <sc-if value="{{add.showTags}}" hint-placeholder-val="{{true}}">
+        <div style="margin-top: 16px; font-size: 12px; font-weight: 600; color: {{t.muted}}">Tag it</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px">
+          <sc-for list="{{tags}}" as="tg" hint-placeholder-count="6">
+            <button onClick="{{tg.pick}}" aria-pressed="{{tg.on}}" style="height: 38px; padding: 0 14px; border-radius: 999px; border: 1.5px solid {{tg.border}}; background: {{tg.bg}}; color: {{tg.fg}}; font: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{tg.label}}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+
+      <button onClick="{{save}}" style="margin-top: 20px; width: 100%; height: 54px; border-radius: 16px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">{{add.saveLabel}}</button>
+    </sc-if>
+
+    <!-- HIGHLIGHT -->
+    <sc-if value="{{sheet.highlight}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 18px">
+        <span style="width: 44px; height: 44px; border-radius: 50%; background: {{t.chip}}; display: flex; align-items: center; justify-content: center">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{hl.icon}}"></path></svg>
+        </span>
+        <div style="display: flex; flex-direction: column">
+          <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.1">{{hl.label}}</h2>
+          <span style="font-size: 13px; color: {{t.muted}}">{{hl.sub}}</span>
+        </div>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{hl.rows}}" as="r" hint-placeholder-count="6">
+          <div style="padding: 14px 16px; border-radius: 16px; background: {{t.bg}}; display: flex; flex-direction: column; gap: 4px">
+            <span style="font-size: 11px; font-weight: 600; letter-spacing: 1.2px; text-transform: uppercase; color: {{t.muted}}">{{r.k}}</span>
+            <span style="font-family: 'Newsreader', Georgia, serif; font-size: 20px; line-height: 1.2">{{r.v}}</span>
+            <span style="font-size: 12px; color: {{t.muted}}">{{r.n}}</span>
+          </div>
+        </sc-for>
+      </div>
+      <button onClick="{{editHighlight}}" style="margin-top: 16px; width: 100%; height: 50px; border-radius: 16px; border: 1.5px solid {{t.line2}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 15px; font-weight: 600; cursor: pointer">Add to {{hl.label}}</button>
+    </sc-if>
+
+    <!-- TILE -->
+    <sc-if value="{{sheet.tile}}" hint-placeholder-val="{{false}}">
+      <div style="height: 280px; border-radius: 20px; overflow: hidden; background: {{tl.bgc}}; color: {{tl.fg}}; position: relative; display: flex; align-items: center; justify-content: center">
+        <sc-if value="{{tl.isNote}}" hint-placeholder-val="{{false}}">
+          <span style="padding: 28px; font-family: 'Newsreader', Georgia, serif; font-size: 30px; line-height: 1.2; text-align: center">{{tl.text}}</span>
+        </sc-if>
+        <sc-if value="{{tl.isVisual}}" hint-placeholder-val="{{true}}">
+          <svg width="140" height="140" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.85" aria-hidden="true"><path d="{{tl.art}}"></path></svg>
+        </sc-if>
+      </div>
+      <div style="padding: 16px 2px 0; display: flex; flex-direction: column; gap: 4px">
+        <span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px">{{tl.heading}}</span>
+        <span style="font-size: 13px; color: {{t.muted}}">{{tl.meta}}</span>
+      </div>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 18px">
+        <button onClick="{{tileWish}}" style="height: 50px; border-radius: 16px; border: 1.5px solid {{t.line2}}; background: transparent; color: {{t.ink}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{tl.wishLabel}}</button>
+        <button onClick="{{tileFind}}" style="height: 50px; border-radius: 16px; border: 0; background: {{t.accent}}; color: {{t.onAccent}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Find gifts like this</button>
+      </div>
+    </sc-if>
+
+    <!-- PAYWALL -->
+    <sc-if value="{{sheet.paywall}}" hint-placeholder-val="{{false}}">
+      <h2 style="margin: 0; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px; line-height: 1.15">Three conversations in. Hope they helped.</h2>
+      <p style="margin: 10px 0 0; font-size: 15px; line-height: 1.5; color: {{t.muted}}">Make it right is unlimited with Noted, together. Anything serious stays free, always.</p>
+      <div style="margin-top: 18px; padding: 20px; border-radius: 22px; background: {{t.accent}}; color: {{t.onAccent}}; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; align-items: center; justify-content: space-between">
+          <span style="font-family: 'Newsreader', Georgia, serif; font-size: 22px; font-style: italic">Noted, together</span>
+          <span style="font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: rgba(255,248,240,0.18)">Both of you</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px">
+          <span style="display: flex">
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: #4D5A4E; box-shadow: 0 0 0 2px {{t.accent}}; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-style: italic; color: #FBF2E6">A</span>
+            <span style="width: 34px; height: 34px; border-radius: 50%; background: #B9765A; box-shadow: 0 0 0 2px {{t.accent}}; margin-left: -8px; display: flex; align-items: center; justify-content: center; font-family: 'Newsreader', Georgia, serif; font-style: italic; color: #FBF2E6">M</span>
+          </span>
+          <span style="font-size: 14px; line-height: 1.35">One plan covers both of you. [PRICE] / month. Cancel anytime.</span>
+        </div>
+      </div>
+      <button onClick="{{upgrade}}" style="margin-top: 16px; width: 100%; height: 54px; border-radius: 16px; border: 0; background: {{t.ink}}; color: {{t.bg}}; font: inherit; font-size: 16px; font-weight: 600; cursor: pointer">Continue with Noted, together</button>
+      <button onClick="{{closeSheet}}" style="margin-top: 6px; width: 100%; height: 48px; border: 0; background: transparent; color: {{t.muted}}; font: inherit; font-size: 14px; font-weight: 600; cursor: pointer">Not now</button>
+    </sc-if>
+
+    <!-- NOTIFICATIONS -->
+    <sc-if value="{{sheet.notif}}" hint-placeholder-val="{{false}}">
+      <h2 style="margin: 0 0 12px; font-family: 'Newsreader', Georgia, serif; font-weight: 400; font-size: 26px">Coming up</h2>
+      <sc-for list="{{notifs}}" as="nt" hint-placeholder-count="3">
+        <button onClick="{{nt.open}}" style="width: 100%; display: flex; gap: 14px; align-items: center; padding: 14px 0; border: 0; border-top: 1px solid {{t.line}}; background: transparent; color: {{t.ink}}; font: inherit; text-align: left; cursor: pointer">
+          <span style="flex: 0 0 auto; width: 44px; height: 44px; border-radius: 50%; background: {{nt.tone}}; color: {{nt.fg}}; display: flex; align-items: center; justify-content: center">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{nt.icon}}"></path></svg>
+          </span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; font-weight: 600">{{nt.title}}</span><span style="font-size: 13px; color: {{t.muted}}">{{nt.body}}</span></span>
+          <span style="font-size: 12px; color: {{t.muted}}">{{nt.when}}</span>
+        </button>
+      </sc-for>
+    </sc-if>
+  </div>
+</sc-if>
+
+<!-- ================= TOAST ================= -->
+<sc-if value="{{hasToast}}" hint-placeholder-val="{{false}}">
+  <div role="status" style="position: absolute; top: 58px; left: 50%; transform: translateX(-50%); max-width: 330px; padding: 11px 18px; border-radius: 999px; background: {{t.ink}}; color: {{t.bg}}; font-size: 14px; font-weight: 600; white-space: nowrap; box-shadow: 0 8px 24px rgba(0,0,0,0.2)">{{toast}}</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","options":["home","partner","moment","add","family","member","you","repair","repairResult","repairSafety","repairPaywall"],"default":"home"},"dark":{"editor":"boolean","default":false},"accent":{"editor":"color","options":["#8A2E3B","#9E4A2C","#3F5A4A","#2F3E5C"],"default":"#8A2E3B"},"$preview":{"width":390,"height":844}}'>
+const ART = {
+  dress: 'M19 5h10l1 7-3 3 9 26H12l9-26-3-3z M21 15h6',
+  shoe: 'M6 30c0-4 2-10 6-10 3 0 4 3 8 3 4 0 7-5 10-5l2 6c4 1 10 3 10 8v3H6z M6 33h36 M18 23l2 4 M23 23l2 4',
+  cup: 'M14 8h20l-6 12h-8z M18 20h12v4H18z M12 26h24v10a4 4 0 0 1-4 4H16a4 4 0 0 1-4-4z M36 29h3a3 3 0 0 1 0 6h-3',
+  flower: 'M24 26c-6 0-10-4-10-9 4 0 6 2 7 4 0-5 1-9 3-11 2 2 3 6 3 11 1-2 3-4 7-4 0 5-4 9-10 9z M24 26v16 M24 34c-4 0-7-2-8-5 M24 37c4 0 7-2 8-5',
+  kurta: 'M18 6l-8 4-4 10 5 2 2-5v25h22V17l2 5 5-2-4-10-8-4c-1 3-3 5-6 5s-5-2-6-5z M24 11v8 M18 30h12 M18 35h12',
+  earring: 'M15 9v5 M8 21a7 7 0 1 0 14 0a7 7 0 1 0-14 0 M33 9v5 M26 21a7 7 0 1 0 14 0a7 7 0 1 0-14 0',
+  book: 'M8 10c6-2 11-1 16 3 5-4 10-5 16-3v26c-6-2-11-1-16 3-5-4-10-5-16-3z M24 13v26',
+  tablet: 'M13 6h22a3 3 0 0 1 3 3v30a3 3 0 0 1-3 3H13a3 3 0 0 1-3-3V9a3 3 0 0 1 3-3z M16 12h16 M16 17h16 M16 22h11',
+  vase: 'M18 6h12 M19 6c0 4-5 6-5 14s4 18 10 18 10-10 10-18-5-10-5-14 M15 24h18',
+  camera: 'M8 12h32v26H8z M8 32h32 M19 22a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M33 16h3',
+  mountain: 'M4 38l12-18 8 10 6-8 14 16z M32 12a4 4 0 1 0 8 0a4 4 0 1 0-8 0',
+  shawl: 'M10 8h28v32H10z M10 15h28 M10 33h28 M15 21l4 4 4-4 4 4 4-4 4 4 M15 27l4-2 4 2 4-2 4 2 4-2',
+  diya: 'M8 28h32c0 6-7 10-16 10S8 34 8 28z M24 26c-3-3-3-7 0-12 3 5 3 9 0 12z M20 38v4h8v-4',
+  plant: 'M24 42V22 M24 26c-6 0-10-4-10-10 6 0 10 4 10 10z M24 22c0-6 4-10 10-10 0 6-4 10-10 10z M16 42h16',
+  watch: 'M18 6h12l1 7 M18 6l-1 7 M18 42h12l1-7 M18 42l-1-7 M14 24a10 10 0 1 0 20 0a10 10 0 1 0-20 0 M24 19v5l3 3',
+  headphones: 'M10 30v-6a14 14 0 0 1 28 0v6 M8 30h6v10H8z M34 30h6v10h-6z',
+  box: 'M6 18h36v22H6z M4 11h40v7H4z M24 11v29 M18 26h12',
+  bowl: 'M6 22h36a18 18 0 0 1-36 0z M16 16c0-3 3-3 3-6 M24 16c0-3 3-3 3-6 M32 16c0-3 3-3 3-6 M18 40h12'
+};
+const IC = {
+  home: 'M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1z',
+  heart: 'M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z',
+  plus: 'M12 5v14M5 12h14',
+  plusSq: 'M4 4h16v16H4z M12 8v8 M8 12h8',
+  family: 'M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M16 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6z M2 20c0-3 3-5 6-5s6 2 6 5 M14 15.5c.6-.3 1.3-.5 2-.5 3 0 6 2 6 5',
+  you: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8z M4 21c0-4 4-6 8-6s8 2 8 6',
+  bell: 'M6 16v-5a6 6 0 0 1 12 0v5l2 2H4z M10 21h4',
+  back: 'M15 5l-7 7 7 7',
+  lock: 'M6 11h12v9H6z M8 11V8a4 4 0 0 1 8 0v3',
+  camera: 'M4 8h4l2-3h4l2 3h4v11H4z M8 13a4 4 0 1 0 8 0a4 4 0 1 0-8 0',
+  link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1 M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1',
+  note: 'M5 19h4L19 9l-4-4L5 15z M13 7l4 4',
+  calendar: 'M4 6h16v14H4z M4 10h16 M8 3v4 M16 3v4',
+  sizes: 'M3 15L15 3l6 6L9 21z M7 11l2 2 M10 8l2 2 M13 5l2 2',
+  food: 'M3 11h18a9 9 0 0 1-18 0z M8 7c0-2 2-2 2-4 M13 7c0-2 2-2 2-4',
+  style: 'M12 7a2 2 0 1 1 2-2 M12 7v2L3 16h18l-9-7',
+  flower: 'M9 9a3 3 0 1 0 6 0a3 3 0 1 0-6 0 M12 12v9 M12 17c-3 0-5-2-5-4 M12 19c3 0 5-2 5-4 M12 6V3 M15 9h3 M9 9H6',
+  dont: 'M5 12a7 7 0 1 0 14 0a7 7 0 1 0-14 0 M7 17L17 7',
+  cake: 'M4 20h16v-7H4z M4 16c2 1 3 1 4 0s3-1 4 0 3 1 4 0 3-1 4 0 M12 13V9 M12 6.5a1.2 1.2 0 0 0 0-2.5',
+  rings: 'M3 14a5 5 0 1 0 10 0a5 5 0 1 0-10 0 M11 14a5 5 0 1 0 10 0a5 5 0 1 0-10 0',
+  cap: 'M2 9l10-5 10 5-10 5z M6 11v5c2 2 10 2 12 0v-5',
+  arrow: 'M7 17L17 7 M9 7h8v8',
+  gift: 'M4 10h16v10H4z M3 7h18v3H3z M12 7v13 M12 7c-2-4-6-3-5 0 M12 7c2-4 6-3 5 0',
+  moon: 'M20 14a8 8 0 1 1-10-10 6 6 0 0 0 10 10z',
+  clock: 'M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0 M12 8v4l3 2',
+  coin: 'M4 12a8 8 0 1 0 16 0a8 8 0 1 0-16 0 M9 9h6 M9 12h6 M12 12l-3 4',
+  mend: 'M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z M12 7.4l-1.5 3 3 2-1.5 3',
+  chev: 'M9 5l7 7-7 7',
+  copy: 'M9 9h11v11H9z M5 15H4V4h11v1',
+  send: 'M5 12h14 M13 6l6 6-6 6'
+};
+const REPAIR_SAMPLE = 'I forgot we had dinner with her parents, then got defensive when she brought it up.';
+const SAFETY_SAMPLE = 'It got physical during the fight tonight and I’m scared of how far it went.';
+const SAFETY_RE = /physical|hit me|hit her|hurt me|hurt her|pushed|slapped|scared of|unsafe|threat|violent|kill|harm myself|choked/i;
+const REPAIR_FEEL = 'Probably less about the dinner, more about what it felt like: that her family, and she, weren’t a priority that evening. The defensiveness likely stung more than the forgetting.';
+const REPAIR_SAY = 'You were right to be upset. I forgot, and then I made it about me instead of listening. I’m sorry. Can I make it up to you, and to your parents?';
+const GESTURES = [
+  { title: 'Peonies, wrapped in brown paper', reason: 'Her favorite. No plastic, never lilies.', price: '₹1,900 · by 7 pm today', tone: '#D49C98', art: ART.flower, toast: 'Opening the florist…' },
+  { title: 'Table for two at her Thai place', reason: 'Green curry is her comfort order.', price: 'Bandra · tomorrow, 8:30 pm', tone: '#5E6B5C', art: ART.bowl, toast: 'Holding a table for two…' }
+];
+const FOLLOW_ANSWERS = [
+  'Give her a little room if she asks for it, but don’t go quiet. Say the line, then let her set the pace.',
+  'Call her mom yourself this week. Short, warm, no excuses. Meera will notice more than she lets on.',
+  'Skip the flowers if things are still raw. Lead with the words. The gesture lands better a day later.'
+];
+const GIFTS = {
+  g1: { title: 'Linen wrap dress, rust', reason: 'She saved this in March. Size S, she checked twice.', price: '₹4,800', tone: '#B8673F', art: ART.dress },
+  g2: { title: 'Gold huggie hoops', reason: 'Lost one gold hoop in Goa in January. Gold, never silver.', price: '₹6,200', tone: '#C9A66B', art: ART.earring },
+  g3: { title: 'Pottery class for two', reason: 'Said she wants to learn pottery. Twice, in August.', price: '₹3,500', tone: '#8F7360', art: ART.vase },
+  g4: { title: 'Ceramic pour-over set', reason: 'Wants slower mornings. Mentioned it on 14 September.', price: '₹2,350', tone: '#5E6B5C', art: ART.cup },
+  g5: { title: 'Peonies, Sunday delivery', reason: 'Loves peonies. Hates lilies. No plastic wrap.', price: '₹1,900', tone: '#D49C98', art: ART.flower },
+  a1: { title: 'Walnut keepsake box, engraved', reason: 'Fifth year is wood. She keeps every ticket stub.', price: '₹3,200', tone: '#7A5A43', art: ART.box },
+  a2: { title: 'Two nights in the Nilgiris', reason: 'Said the hills are where she sleeps best.', price: '₹18,000', tone: '#4E6457', art: ART.mountain },
+  a3: { title: 'Instax film, 60 shots', reason: 'Ran out of film at Riya’s birthday.', price: '₹2,100', tone: '#C7B9A4', art: ART.camera },
+  m1: { title: 'Pashmina shawl, muted gold', reason: 'Sunita prefers pashmina. Nothing synthetic.', price: '₹7,500', tone: '#B48A4E', art: ART.shawl },
+  m2: { title: 'Brass diya set', reason: 'She collects brass diyas. Has none in this shape.', price: '₹2,800', tone: '#A67C3D', art: ART.diya },
+  m3: { title: 'Large-print poetry collection', reason: 'Reads every evening, prefers bigger print.', price: '₹950', tone: '#6C5A4E', art: ART.book },
+  r1: { title: 'Wireless headphones', reason: 'Riya’s pair broke in September.', price: '₹8,990', tone: '#3E4A5E', art: ART.headphones },
+  r2: { title: 'Sketchbook and fineliner set', reason: 'Final year at design school.', price: '₹1,400', tone: '#C6B49A', art: ART.book },
+  r3: { title: 'A plant for her hostel room', reason: 'Asked Meera for a plant that survives neglect.', price: '₹900', tone: '#5F7A5A', art: ART.plant },
+  d1: { title: 'Leather watch strap', reason: 'Rajesh keeps saying his strap is cracking.', price: '₹2,200', tone: '#6B4A35', art: ART.watch },
+  d2: { title: 'Crime fiction box set', reason: 'Reads one a week on the morning walk bench.', price: '₹1,800', tone: '#2F3B45', art: ART.book },
+  k1: { title: 'Fresh jasmine gajra, weekly', reason: 'Dadi wears one every Friday.', price: '₹600', tone: '#D8CDB4', art: ART.flower }
+};
+const MOMENTS = [
+  { id: 'bday', title: 'Meera’s birthday', short: 'Her birthday', date: '2026-11-15', icon: IC.cake, tone: '#B8673F', sub: 'Every year', feed: ['g1', 'g2', 'g3', 'g4', 'g5'], picks: ['g1', 'g2', 'g3'], past: [
+    { year: '2025', gift: 'Silver anklet', reaction: 'Wore it twice. Note to self: gold, not silver.' },
+    { year: '2024', gift: 'Weekend in Coorg', reaction: 'Still her favorite trip. Brings it up often.' },
+    { year: '2023', gift: 'Instax camera', reaction: 'Takes it to every wedding.' } ] },
+  { id: 'anniv', title: 'Your anniversary', short: 'Anniversary', date: '2026-12-07', icon: IC.rings, tone: '#7A2E3B', sub: 'Five years', picks: ['a1', 'a2', 'a3'], past: [
+    { year: '2025', gift: 'Dinner where you first met', reaction: 'Called it the best night of the year.' },
+    { year: '2024', gift: 'A letter and a record', reaction: 'Kept the letter on her desk. Record still sealed.' },
+    { year: '2023', gift: 'Weekend in Alibaug', reaction: 'Rained the whole time. She loved it anyway.' } ] },
+  { id: 'mom', title: 'Sunita’s birthday', short: 'Her mom', date: '2026-12-19', icon: IC.flower, tone: '#A67C3D', sub: 'Meera’s mom', picks: ['m1', 'm2', 'm3'], past: [
+    { year: '2025', gift: 'Brass urli', reaction: 'In her living room. Tells everyone who gave it.' },
+    { year: '2024', gift: 'Box of Kesar mangoes', reaction: 'Shared with the whole building.' } ] },
+  { id: 'riya', title: 'Riya’s graduation', short: 'Riya', date: '2027-01-10', icon: IC.cap, tone: '#3E4A5E', sub: 'Meera’s sister', picks: ['r1', 'r2', 'r3'], past: [] }
+];
+const TILES = [
+  { id: 't1', kind: 'photo', cat: 'wish', art: ART.dress, tone: '#B8673F', caption: 'Rust linen dress', saved: 'Saved 12 March' },
+  { id: 't2', kind: 'note', cat: 'note', text: 'Hates lilies, loves peonies', bg: '#E8D9C3', saved: 'Noted 2 February' },
+  { id: 't3', kind: 'link', cat: 'wish', art: ART.cup, tone: '#5E6B5C', title: 'Ceramic pour-over', price: '₹2,350', saved: 'Link saved 14 September' },
+  { id: 't4', kind: 'note', cat: 'note', text: 'Oat flat white, extra hot', bg: '#2F3B33', saved: 'Noted 9 June' },
+  { id: 't5', kind: 'photo', cat: 'wish', art: ART.shoe, tone: '#CFC6B5', caption: 'White canvas, UK 5', saved: 'Saved 30 July' },
+  { id: 't6', kind: 'note', cat: 'note', text: 'Wants to learn pottery. Said it twice.', bg: '#D7A385', saved: 'Noted 21 August' },
+  { id: 't7', kind: 'photo', cat: 'note', art: ART.flower, tone: '#D49C98', caption: 'Peonies at the market', saved: 'Photo 5 April' },
+  { id: 't8', kind: 'note', cat: 'note', text: 'Ring size 12. Measured with string. She doesn’t know.', bg: '#F1E5CC', saved: 'Noted 18 May' },
+  { id: 't9', kind: 'link', cat: 'wish', art: ART.tablet, tone: '#3B3633', title: 'E-reader, warm light', price: '₹13,999', saved: 'Link saved 2 October' },
+  { id: 't10', kind: 'note', cat: 'note', text: 'Lost a gold hoop in Goa. Replace it.', bg: '#7A2E3B', saved: 'Noted 6 January' },
+  { id: 't11', kind: 'photo', cat: 'wish', art: ART.kurta, tone: '#3E4E6C', caption: 'Indigo block-print kurta', saved: 'Saved 11 October' },
+  { id: 't12', kind: 'note', cat: 'note', text: 'Calls her mom every Sunday at 7', bg: '#E2DED0', saved: 'Noted 3 March' }
+];
+const HIGHLIGHTS = {
+  sizes: { label: 'Sizes', icon: IC.sizes, sub: 'Checked October 2026', rows: [
+    { k: 'Shoe', v: 'UK 5', n: 'EU 38, half up in heels' }, { k: 'Top', v: 'S', n: 'M if it’s slim fit' },
+    { k: 'Bottom', v: '28', n: 'S in drawstring' }, { k: 'Ring', v: '12', n: 'US 6, right ring finger' },
+    { k: 'Dress', v: 'S', n: 'Prefers midi length' }, { k: 'Kurta', v: 'M', n: 'Straight cut, not flared' } ] },
+  food: { label: 'Food', icon: IC.food, sub: 'What she orders, every time', rows: [
+    { k: 'Coffee', v: 'Oat flat white', n: 'Extra hot' }, { k: 'Comfort', v: 'Thai green curry', n: 'Medium spice' },
+    { k: 'Sweet', v: 'Dark chocolate', n: '70% and up' }, { k: 'Dessert', v: 'Kesar pista kulfi', n: 'Never cake' },
+    { k: 'Avoids', v: 'Mushrooms', n: 'All of them' }, { k: 'Sunday', v: 'Pav bhaji', n: 'Extra butter' } ] },
+  style: { label: 'Style', icon: IC.style, sub: 'Quiet, earthy, considered', rows: [
+    { k: 'Palette', v: 'Rust, olive, indigo', n: 'No neon' }, { k: 'Metal', v: 'Gold only', n: 'Silver sits in a drawer' },
+    { k: 'Fabric', v: 'Linen, mul', n: 'Breathable' }, { k: 'Jewellery', v: 'Small, daily', n: 'Nothing chunky' },
+    { k: 'Kurtas', v: 'Block-print', n: 'Hand-done' }, { k: 'Bags', v: 'Structured tote', n: 'Tan or black' } ] },
+  flowers: { label: 'Flowers', icon: IC.flower, sub: 'For any day, not just the big ones', rows: [
+    { k: 'Favorite', v: 'Peonies', n: 'Blush or white' }, { k: 'Also', v: 'Ranunculus', n: 'And tuberose' },
+    { k: 'Never', v: 'Lilies', n: 'Hates the smell' }, { k: 'Wrap', v: 'Brown paper', n: 'No plastic' } ] },
+  dont: { label: 'Don’t buy', icon: IC.dont, sub: 'Learned the hard way', rows: [
+    { k: 'Flowers', v: 'Lilies', n: 'Ever' }, { k: 'Metal', v: 'Silver', n: 'See: 2025 anklet' },
+    { k: 'Candles', v: 'Vanilla', n: 'Too sweet' }, { k: 'Toys', v: 'Soft toys', n: 'We’re not 19' },
+    { k: 'Branding', v: 'Big logos', n: 'Prefers quiet' }, { k: 'Plans', v: 'Surprise parties', n: 'Small dinners instead' } ] }
+};
+const FAMILY = [
+  { id: 'mom', name: 'Sunita Kapoor', first: 'Mom', initial: 'S', relation: 'Her mom', tone: '#A67C3D', noteCount: 14, dates: [
+    { label: 'Birthday', when: 'Saturday, 19 December', date: '2026-12-19', icon: IC.cake },
+    { label: 'Parents’ anniversary', when: 'Wednesday, 24 February', date: '2027-02-24', icon: IC.rings } ],
+    notes: [ { text: 'Waits all year for Kesar mangoes', bg: '#E6B860' }, { text: 'Collects brass diyas', bg: '#F1E5CC' },
+      { text: 'Pashmina only. Nothing synthetic.', bg: '#7A5A43' }, { text: 'Sunday calls at 7. Never miss it.', bg: '#E2DED0' } ],
+    ideas: ['m1', 'm2'] },
+  { id: 'dad', name: 'Rajesh Kapoor', first: 'Dad', initial: 'R', relation: 'Her dad', tone: '#4E5B52', noteCount: 9, dates: [
+    { label: 'Birthday', when: 'Tuesday, 2 March', date: '2027-03-02', icon: IC.cake } ],
+    notes: [ { text: 'Shirt size 42. Prefers checks.', bg: '#E8D9C3' }, { text: 'Morning walks at Carter Road', bg: '#4E6457' },
+      { text: 'Reads one crime novel a week', bg: '#2F3B45' }, { text: 'Watch strap is cracking', bg: '#D7A385' } ],
+    ideas: ['d1', 'd2'] },
+  { id: 'riya', name: 'Riya Kapoor', first: 'Riya', initial: 'R', relation: 'Her younger sister', tone: '#3E4A5E', noteCount: 11, dates: [
+    { label: 'Graduation', when: 'Sunday, 10 January', date: '2027-01-10', icon: IC.cap },
+    { label: 'Birthday', when: 'Tuesday, 22 June', date: '2027-06-22', icon: IC.cake } ],
+    notes: [ { text: 'Final year at design school', bg: '#C6B49A' }, { text: 'Headphones broke in September', bg: '#3E4A5E' },
+      { text: 'XS top, UK 4 shoe', bg: '#F1E5CC' }, { text: 'Into film photography lately', bg: '#D49C98' } ],
+    ideas: ['r1', 'r2'] },
+  { id: 'dadi', name: 'Kamla Kapoor', first: 'Dadi', initial: 'K', relation: 'Her grandmother', tone: '#8A6A5C', noteCount: 6, dates: [
+    { label: 'Birthday', when: 'Monday, 30 August', date: '2027-08-30', icon: IC.cake } ],
+    notes: [ { text: 'Jasmine gajra every Friday', bg: '#F1E5CC' }, { text: 'Large print books only', bg: '#6C5A4E' } ],
+    ideas: ['k1'] }
+];
+const TAG_COLORS = { Wishlist: '#7C3B2E', Sizes: '#E8DCC6', Food: '#D9A27E', Style: '#3E4E6C', Flowers: '#E3B5B0', 'Don’t buy': '#2E2A27' };
+const TODAY = Date.UTC(2026, 10, 3);
+
+function lum(hex) {
+  const h = (hex || '#000000').replace('#', '');
+  const c = [0, 2, 4].map((i) => parseInt(h.substr(i, 2), 16) / 255).map((v) => (v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function fgFor(hex) { return lum(hex) > 0.36 ? '#221C18' : '#FBF4EA'; }
+function mix(hex, to, amt) {
+  const a = hex.replace('#', ''); const b = to.replace('#', '');
+  const out = [0, 2, 4].map((i) => Math.round(parseInt(a.substr(i, 2), 16) * (1 - amt) + parseInt(b.substr(i, 2), 16) * amt));
+  return '#' + out.map((v) => v.toString(16).padStart(2, '0')).join('');
+}
+function daysUntil(iso) {
+  const p = iso.split('-').map(Number);
+  return Math.round((Date.UTC(p[0], p[1] - 1, p[2]) - TODAY) / 86400000);
+}
+function longDate(iso) {
+  const p = iso.split('-').map(Number);
+  return new Date(Date.UTC(p[0], p[1] - 1, p[2])).toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', timeZone: 'UTC' });
+}
+function dayWord(n) { return n === 1 ? '1 day' : n + ' days'; }
+
+class Component extends DCLogic {
+  s() { return this.state || {}; }
+  flash(msg) {
+    this.setState({ toast: msg });
+    clearTimeout(this._tt);
+    this._tt = setTimeout(() => this.setState({ toast: null }), 2200);
+  }
+  componentWillUnmount() { clearTimeout(this._tt); }
+  go(screen, extra) { this.setState(Object.assign({ screen: screen, sheet: null, prev: this.cur().screen }, extra || {})); }
+  cur() {
+    const st = this.s();
+    const start = this.props.start || 'home';
+    const startMap = { add: 'partner', repairSafety: 'repairResult', repairPaywall: 'repair' };
+    const startScreen = startMap[start] || start;
+    return {
+      screen: st.screen || startScreen,
+      sheet: 'sheet' in st ? st.sheet : (start === 'add' ? 'add' : (start === 'repairPaywall' ? 'paywall' : null)),
+      repairText: st.repairText != null ? st.repairText : '',
+      repairSent: st.repairSent != null ? st.repairSent : (start === 'repairSafety' ? SAFETY_SAMPLE : REPAIR_SAMPLE),
+      repairUses: st.repairUses != null ? st.repairUses : (start === 'repairPaywall' ? 3 : (start === 'repairResult' ? 1 : 0)),
+      unlimited: !!st.unlimited,
+      followups: st.followups || [],
+      followText: st.followText != null ? st.followText : '',
+      copied: !!st.copied,
+      dark: 'dark' in st ? st.dark : !!this.props.dark,
+      momentId: st.momentId || 'bday',
+      memberId: st.memberId || 'mom',
+      tiles: st.tiles || TILES,
+      extraMoments: st.extraMoments || [],
+      mode: st.mode || 'note',
+      tag: st.tag || 'Wishlist',
+      text: st.text != null ? st.text : '',
+      caption: st.caption != null ? st.caption : '',
+      link: st.link != null ? st.link : '',
+      occasion: st.occasion != null ? st.occasion : '',
+      date: st.date || '2026-12-24',
+      snapped: !!st.snapped,
+      gridTab: st.gridTab || 'all',
+      saved: st.saved || {},
+      planned: st.planned || {},
+      highlight: st.highlight || 'sizes',
+      tileId: st.tileId || 't1',
+      prev: st.prev || 'home'
+    };
+  }
+  save() {
+    const c = this.cur();
+    const id = 'n' + Date.now();
+    if (c.mode === 'date') {
+      const name = c.occasion.trim() || 'Something to remember';
+      const m = { id: id, title: name, short: name.length > 12 ? name.slice(0, 11) + '…' : name, date: c.date, icon: IC.calendar, tone: '#6C5A4E', sub: 'Added just now', picks: [], past: [] };
+      this.setState({ extraMoments: c.extraMoments.concat([m]), sheet: null, screen: 'home', occasion: '' });
+      this.flash('Date saved. You’ll get a nudge.');
+      return;
+    }
+    let tile;
+    const cat = c.tag === 'Wishlist' ? 'wish' : 'note';
+    if (c.mode === 'note') {
+      tile = { id: id, kind: 'note', cat: cat, text: c.text.trim() || 'Loved the jasmine tea at the café on 3rd Road', bg: TAG_COLORS[c.tag] || '#E8D9C3', saved: 'Noted just now' };
+    } else if (c.mode === 'photo') {
+      tile = { id: id, kind: 'photo', cat: cat, art: ART.kurta, tone: '#9E5B4A', caption: c.caption.trim() || 'New photo', saved: 'Photo just now' };
+    } else {
+      const raw = c.link.trim() || 'https://shop.example/linen-wrap-dress-rust';
+      const slug = raw.split('/').filter(Boolean).pop() || 'Saved link';
+      const title = slug.replace(/[-_]+/g, ' ').replace(/^./, (x) => x.toUpperCase());
+      tile = { id: id, kind: 'link', cat: 'wish', art: ART.dress, tone: '#B8673F', title: title, price: '₹4,800', saved: 'Link saved just now' };
+    }
+    this.setState({ tiles: [tile].concat(c.tiles), sheet: null, screen: 'partner', gridTab: 'all', text: '', caption: '', link: '', snapped: false });
+    this.flash('Saved to Meera · ' + c.tag);
+  }
+  renderVals() {
+    const c = this.cur();
+    const accent = this.props.accent || '#8A2E3B';
+    const t = c.dark ? {
+      bg: '#16120F', surface: '#211B17', bar: '#1A1512', ink: '#F2EAE0', muted: '#A99C90', line: '#2F2722', line2: '#4A3F38', chip: '#2C241F',
+      accent: accent, onAccent: '#FFF8F0', accentText: mix(accent, '#FFFFFF', 0.45), shadow: 'none'
+    } : {
+      bg: '#F5EFE6', surface: '#FFFCF7', bar: '#FBF7F0', ink: '#221C18', muted: '#6B5F56', line: '#E6DCCD', line2: '#D3C6B4', chip: '#EDE4D6',
+      accent: accent, onAccent: '#FFF8F0', accentText: accent, shadow: '0 1px 2px rgba(60,40,25,0.06), 0 8px 24px rgba(60,40,25,0.07)'
+    };
+    const screen = c.screen;
+    const sheet = c.sheet;
+    const gift = (id, extra) => {
+      const g = GIFTS[id];
+      return Object.assign({}, g, {
+        fg: fgFor(g.tone),
+        shop: () => this.flash('Opening shop link for ' + g.title),
+        shopLabel: 'Shop ' + g.title,
+        heartFill: c.saved[id] ? 'currentColor' : 'none',
+        saveLabel: c.saved[id] ? 'Saved' : 'Save for later',
+        toggleSave: () => { const s = Object.assign({}, c.saved); s[id] = !s[id]; this.setState({ saved: s }); this.flash(s[id] ? 'Saved to wishlist' : 'Removed'); }
+      }, extra || {});
+    };
+
+    // moments
+    const all = MOMENTS.concat(c.extraMoments).map((m) => Object.assign({}, m, { days: daysUntil(m.date) }))
+      .filter((m) => m.days >= 0).sort((a, b) => a.days - b.days);
+    const moments = all.map((m, i) => {
+      const first = i === 0;
+      return Object.assign({}, m, {
+        size: first ? '82px' : '66px', colW: first ? '86px' : '70px', iconSize: first ? 30 : 24,
+        ring: first ? '2px solid ' + t.accent : '1.5px solid ' + t.line2,
+        fg: fgFor(m.tone),
+        countLabel: first ? dayWord(m.days) : 'in ' + m.days + 'd',
+        countColor: first ? t.onAccent : t.muted,
+        countBg: first ? t.accent : 'transparent',
+        aria: m.title + ', in ' + dayWord(m.days),
+        open: () => this.go('moment', { momentId: m.id })
+      });
+    });
+    const near = all[0] || MOMENTS[0];
+    const nearest = {
+      title: near.id === 'bday' ? 'her birthday' : near.title,
+      short: near.short,
+      countLong: 'In ' + dayWord(near.days) + ' · ' + longDate(near.date),
+      countShort: near.days + 'd',
+      open: () => this.go('moment', { momentId: near.id })
+    };
+    const feedIds = near.feed || near.picks || [];
+    const feed = feedIds.map((id) => gift(id));
+
+    // moment detail
+    const mRaw = all.find((m) => m.id === c.momentId) || all[0];
+    const planned = !!c.planned[mRaw.id];
+    const mo = Object.assign({}, mRaw, {
+      fg: fgFor(mRaw.tone), dateLong: longDate(mRaw.date), daysWord: mRaw.days === 1 ? 'Day' : 'Days',
+      planLine: mRaw.days > 7 ? 'Reminder set for 7 days before' : 'Reminder is on. This week matters.',
+      progress: Math.max(6, Math.min(100, Math.round((1 - mRaw.days / 90) * 100))) + '%',
+      picks: (mRaw.picks || []).map((id) => gift(id)),
+      past: mRaw.past || [],
+      noPicks: !(mRaw.picks && mRaw.picks.length),
+      noPast: !(mRaw.past && mRaw.past.length),
+      planLabel: planned ? 'Gift planned. Nice.' : 'Mark a gift as planned',
+      planBg: planned ? 'transparent' : t.ink, planFg: planned ? t.accentText : t.bg,
+      planBorder: planned ? '1.5px solid ' + t.accentText : '0'
+    });
+
+    // tiles
+    const decorate = (tl) => {
+      const bgc = tl.kind === 'note' ? tl.bg : (tl.kind === 'photo' ? tl.tone : t.chip);
+      return Object.assign({}, tl, {
+        isPhoto: tl.kind === 'photo', isNote: tl.kind === 'note', isLink: tl.kind === 'link', isVisual: tl.kind !== 'note',
+        bgc: bgc, fg: fgFor(bgc), artFg: fgFor(tl.tone || '#000000'),
+        aria: tl.text || tl.caption || tl.title,
+        open: () => this.setState({ sheet: 'tile', tileId: tl.id })
+      });
+    };
+    const filtered = c.tiles.filter((tl) => c.gridTab === 'all' || (c.gridTab === 'wish' ? tl.cat === 'wish' : tl.kind === 'note'));
+    const grid = filtered.map(decorate);
+    const wishCount = c.tiles.filter((x) => x.cat === 'wish').length;
+    const stats = { notes: 36 + c.tiles.length, wish: 6 + wishCount, dates: MOMENTS.length + c.extraMoments.length + 2 };
+    const gridTabs = [['all', 'All'], ['wish', 'Wishlist'], ['notes', 'Notes']].map((p) => ({
+      label: p[1], on: c.gridTab === p[0], color: c.gridTab === p[0] ? t.ink : t.muted, bar: c.gridTab === p[0] ? t.ink : 'transparent',
+      pick: () => this.setState({ gridTab: p[0] })
+    }));
+    const tRaw = c.tiles.find((x) => x.id === c.tileId) || c.tiles[0];
+    const tlD = decorate(tRaw);
+    const tl = Object.assign({}, tlD, {
+      art: tRaw.art || ART.dress,
+      heading: tRaw.text ? 'A note' : (tRaw.caption || tRaw.title),
+      meta: tRaw.saved + ' · ' + (tRaw.cat === 'wish' ? 'Wishlist' : 'Notes') + (tRaw.price ? ' · ' + tRaw.price : ''),
+      wishLabel: tRaw.cat === 'wish' ? 'In wishlist' : 'Move to wishlist'
+    });
+
+    // highlights
+    const highlights = Object.keys(HIGHLIGHTS).map((k) => ({ label: HIGHLIGHTS[k].label, icon: HIGHLIGHTS[k].icon, open: () => this.setState({ sheet: 'highlight', highlight: k }) }));
+    const hl = HIGHLIGHTS[c.highlight];
+
+    // family
+    const family = FAMILY.map((f) => {
+      const next = f.dates.map((d) => Object.assign({}, d, { days: daysUntil(d.date) })).filter((d) => d.days >= 0).sort((a, b) => a.days - b.days)[0];
+      const soon = next && next.days <= 60;
+      return Object.assign({}, f, {
+        ring: soon ? '2px solid ' + t.accent : '1.5px solid ' + t.line2,
+        nextCount: next ? 'in ' + dayWord(next.days) : '',
+        nextLabel: next ? next.label : '',
+        nextColor: soon ? t.onAccent : t.ink, nextBg: soon ? t.accent : t.chip,
+        open: () => this.go('member', { memberId: f.id })
+      });
+    });
+    const fRaw = FAMILY.find((f) => f.id === c.memberId) || FAMILY[0];
+    const fm = Object.assign({}, fRaw, {
+      ideaCount: fRaw.ideas.length + 3, dateCount: fRaw.dates.length,
+      dates: fRaw.dates.map((d) => Object.assign({}, d, { count: dayWord(daysUntil(d.date)) })),
+      notes: fRaw.notes.map((n) => Object.assign({}, n, { fg: fgFor(n.bg) })),
+      ideas: fRaw.ideas.map((id) => gift(id))
+    });
+
+    // add sheet
+    const modes = [['photo', 'Photo', IC.camera], ['link', 'Link', IC.link], ['note', 'Note', IC.note], ['date', 'Date', IC.calendar]].map((m) => ({
+      label: m[1], icon: m[2], on: c.mode === m[0],
+      bg: c.mode === m[0] ? t.ink : t.chip, fg: c.mode === m[0] ? t.bg : t.ink,
+      pick: () => this.setState({ mode: m[0] })
+    }));
+    const tags = Object.keys(TAG_COLORS).map((k) => ({
+      label: k, on: c.tag === k,
+      bg: c.tag === k ? t.accent : 'transparent', fg: c.tag === k ? t.onAccent : t.ink, border: c.tag === k ? t.accent : t.line2,
+      pick: () => this.setState({ tag: k })
+    }));
+    const linkSlug = (c.link.split('/').filter(Boolean).pop() || '').replace(/[-_]+/g, ' ');
+    const add = {
+      isNote: c.mode === 'note', isPhoto: c.mode === 'photo', isLink: c.mode === 'link', isDate: c.mode === 'date',
+      showTags: c.mode !== 'date',
+      text: c.text, caption: c.caption, link: c.link, occasion: c.occasion, date: c.date,
+      hasLink: c.link.length > 8, linkTitle: linkSlug ? linkSlug.replace(/^./, (x) => x.toUpperCase()) : 'Saved link',
+      camBg: c.snapped ? '#9E5B4A' : '#2A2421', camFg: '#FBF2E6', camArt: c.snapped ? ART.kurta : ART.camera,
+      camIconSize: c.snapped ? 96 : 52, camLabel: c.snapped ? 'Got it. Tap to retake' : 'Tap to snap',
+      saveLabel: c.mode === 'date' ? 'Save date' : 'Save to Meera'
+    };
+
+    const notifs = [
+      { title: 'Her birthday is in 12 days', body: 'Three picks are ready from your notes.', when: 'Now', icon: IC.cake, tone: '#B8673F', id: 'bday' },
+      { title: 'Five years on 7 December', body: 'Wood is the traditional gift.', when: '2h', icon: IC.rings, tone: '#7A2E3B', id: 'anniv' },
+      { title: 'Riya graduates in January', body: 'Her headphones broke. Worth a look.', when: 'Mon', icon: IC.cap, tone: '#3E4A5E', id: 'riya' }
+    ].map((n) => Object.assign({}, n, { fg: fgFor(n.tone), open: () => this.go('moment', { momentId: n.id }) }));
+
+    const isRepair = screen === 'repair' || screen === 'repairResult';
+    const tab = (k, fillable) => {
+      const on = screen === k || (k === 'family' && screen === 'member') || (k === 'partner' && isRepair);
+      return { color: on ? t.ink : t.muted, fill: fillable && on ? 'currentColor' : 'none', sw: on ? '2.1' : '1.6', go: () => this.go(k) };
+    };
+
+    // make it right
+    const isSafety = SAFETY_RE.test(c.repairSent);
+    const left = Math.max(0, 3 - c.repairUses);
+    const repair = {
+      text: c.repairText, sent: c.repairSent, safety: isSafety, normal: !isSafety, followText: c.followText,
+      leftLabel: c.unlimited ? 'Unlimited' : (left === 0 ? 'No free conversations left' : (left === 1 ? '1 free conversation left' : left + ' free conversations left'))
+    };
+    const repairStarters = ['I forgot something that mattered', 'I said something sharp', 'Same fight, again'].map((s) => ({
+      label: s, pick: () => this.setState({ repairText: s + '. ' })
+    }));
+    const gestures = GESTURES.map((g) => Object.assign({}, g, { fg: fgFor(g.tone), get: () => this.flash(g.toast) }));
+
+    return {
+      t: t, ic: IC, art: ART,
+      is: { home: screen === 'home', partner: screen === 'partner', moment: screen === 'moment', family: screen === 'family', member: screen === 'member', you: screen === 'you', repair: screen === 'repair', repairResult: screen === 'repairResult' },
+      repair: repair, repairStarters: repairStarters, gestures: gestures, followups: c.followups,
+      repairFeel: REPAIR_FEEL, repairSay: REPAIR_SAY, copyLabel: c.copied ? 'Copied' : 'Copy',
+      openRepair: () => this.go('repair'),
+      backToPartner: () => this.go('partner'),
+      onRepairText: (e) => this.setState({ repairText: e.target.value }),
+      onFollowText: (e) => this.setState({ followText: e.target.value }),
+      submitRepair: () => {
+        const text = c.repairText.trim() || REPAIR_SAMPLE;
+        if (SAFETY_RE.test(text)) { this.setState({ screen: 'repairResult', sheet: null, repairSent: text, repairText: '', followups: [], copied: false }); return; }
+        if (!c.unlimited && c.repairUses >= 3) { this.setState({ sheet: 'paywall' }); return; }
+        this.setState({ screen: 'repairResult', sheet: null, repairSent: text, repairText: '', repairUses: c.repairUses + 1, followups: [], copied: false });
+      },
+      copyLine: () => {
+        try { if (navigator.clipboard) navigator.clipboard.writeText(REPAIR_SAY); } catch (err) {}
+        this.setState({ copied: true });
+        this.flash('Copied. Make it sound like you.');
+      },
+      sendFollow: () => {
+        const q = c.followText.trim();
+        if (!q) return;
+        const a = FOLLOW_ANSWERS[c.followups.length % FOLLOW_ANSWERS.length];
+        this.setState({ followups: c.followups.concat([{ q: q, a: a }]), followText: '' });
+      },
+      findHelp: () => this.flash('Finding counselors near you…'),
+      upgrade: () => { this.setState({ sheet: null, unlimited: true }); this.flash('Welcome to Noted, together'); },
+      moments: moments, nearest: nearest, feed: feed, feedEmpty: feed.length === 0,
+      mo: mo, stats: stats, highlights: highlights, gridTabs: gridTabs, grid: grid,
+      family: family, fm: fm,
+      nav: { home: tab('home', true), partner: tab('partner', true), family: tab('family'), you: tab('you') },
+      sheetOpen: !!sheet,
+      sheet: { add: sheet === 'add', highlight: sheet === 'highlight', tile: sheet === 'tile', notif: sheet === 'notif', paywall: sheet === 'paywall' },
+      sheetLabel: sheet === 'paywall' ? 'Upgrade' : sheet === 'add' ? 'Quick add' : sheet === 'highlight' ? hl.label : sheet === 'notif' ? 'Notifications' : 'Note',
+      hl: hl, tl: tl, modes: modes, tags: tags, add: add, notifs: notifs,
+      hasToast: !!this.s().toast, toast: this.s().toast || '',
+      darkOn: c.dark,
+      sw: { track: c.dark ? t.accent : t.line2, knob: c.dark ? '21px' : '3px' },
+      settings: [
+        { label: 'Reminders', value: '7 days before', icon: IC.clock, tap: () => this.flash('Reminder timing, coming soon') },
+        { label: 'Shop region', value: 'India · INR', icon: IC.coin, tap: () => this.flash('Shop region, coming soon') },
+        { label: 'Partner', value: 'Meera Kapoor', icon: IC.heart, tap: () => this.go('partner') }
+      ],
+      goBack: () => this.go(screen === 'member' ? 'family' : (screen === 'repairResult' ? 'repair' : (screen === 'repair' ? 'partner' : (c.prev && c.prev !== screen ? c.prev : 'home')))),
+      openNotif: () => this.setState({ sheet: 'notif' }),
+      openAdd: () => this.setState({ sheet: 'add', mode: 'note' }),
+      openAddDate: () => this.setState({ sheet: 'add', mode: 'date' }),
+      closeSheet: () => this.setState({ sheet: null }),
+      addFamily: () => this.flash('Add a family member, coming soon'),
+      toggleDark: () => this.setState({ dark: !c.dark }),
+      togglePlanned: () => { const p = Object.assign({}, c.planned); p[mRaw.id] = !p[mRaw.id]; this.setState({ planned: p }); if (p[mRaw.id]) this.flash('Planned. We’ll stop nudging.'); },
+      editHighlight: () => this.setState({ sheet: 'add', mode: 'note', tag: hl.label === 'Don’t buy' ? 'Don’t buy' : (TAG_COLORS[hl.label] ? hl.label : 'Wishlist') }),
+      tileWish: () => {
+        const tiles = c.tiles.map((x) => x.id === tRaw.id ? Object.assign({}, x, { cat: 'wish' }) : x);
+        this.setState({ tiles: tiles }); this.flash('On her wishlist');
+      },
+      tileFind: () => this.flash('Finding gifts like this…'),
+      onText: (e) => this.setState({ text: e.target.value }),
+      onCaption: (e) => this.setState({ caption: e.target.value }),
+      onLink: (e) => this.setState({ link: e.target.value }),
+      onOccasion: (e) => this.setState({ occasion: e.target.value }),
+      onDate: (e) => this.setState({ date: e.target.value }),
+      paste: () => this.setState({ link: 'https://shop.example/linen-wrap-dress-rust' }),
+      snap: () => this.setState({ snapped: !c.snapped }),
+      save: () => this.save()
+    };
+  }
+}
+</script>
+</body>
+</html>
